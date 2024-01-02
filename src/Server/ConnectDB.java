@@ -19,7 +19,8 @@ public class ConnectDB {
 
     public static Connection getConnection() {
         try {
-            String dbURL = "jdbc:sqlserver://localhost;databaseName=THITRACNGHIEM;user=sa;password=123";
+            String dbURL = "jdbc:sqlserver://DESKTOP-8PSQBN9:1433;" 
+            + "databaseName=THITRACNGHIEM;user=Nguyen;password=123456789;";
             Connection conn = DriverManager.getConnection(dbURL);
             return conn;
         } catch (SQLException e) {
