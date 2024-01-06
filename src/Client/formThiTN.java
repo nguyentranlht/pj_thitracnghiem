@@ -44,9 +44,6 @@ public final class formThiTN extends javax.swing.JFrame {
         listCauhoi = new ArrayList();
         cauChon = new ArrayList();
         ThiTracNghiem();
-        URL urlIcon = formClient.class.getResource("icon.png");
-        Image img = Toolkit.getDefaultToolkit().createImage(urlIcon);
-        this.setIconImage(img);
     }
 
     @Override
@@ -152,10 +149,10 @@ public final class formThiTN extends javax.swing.JFrame {
                     CauHoi CH = new CauHoi();
                     CH.setCauHoi(Integer.parseInt(arrStr[i]));
                     CH.setNoiDung(arrStr[i + 1]);
-                    CH.setCauA(arrStr[i + 3]);
-                    CH.setCauB(arrStr[i + 4]);
-                    CH.setCauC(arrStr[i + 5]);
-                    CH.setCauD(arrStr[i + 6]);
+                    CH.setCauA(arrStr[i + 2]);
+                    CH.setCauB(arrStr[i + 3]);
+                    CH.setCauC(arrStr[i + 4]);
+                    CH.setCauD(arrStr[i + 5]);
                     listCauhoi.add(CH);
                 }
                 dem++;

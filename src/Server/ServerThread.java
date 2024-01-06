@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -83,6 +84,21 @@ public class ServerThread implements Runnable {
                     }
                     System.out.println("Số câu đúng: " + cauDung);
                     dos.writeUTF(String.valueOf(cauDung));
+                    break;
+                case 5:
+                    String[] arrStr1 = receive.split("///");
+                    System.out.println("Email: " + arrStr1[1] + "\nMat Khau: " + arrStr1[2]);
+                    {
+                        try {
+                            if (ConnectDB.CheckLogIn(receiveArray[1], receiveArray[2])== true) {
+                                dos.writeUTF("Connected");
+                            } else {
+                                dos.writeUTF("Connected fail");
+                            }
+                        } catch (SQLException ex) {
+                            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                     break;
             }
         } catch (IOException ex) {
