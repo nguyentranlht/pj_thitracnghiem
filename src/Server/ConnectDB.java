@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * @author Pham Minh Hieu
@@ -49,7 +50,31 @@ public class ConnectDB {
         }
         return check;
     }
-
+    public static String getAllExams() {
+           Connection conn = getConnection();
+           String sql = "{CALL GETLISTEXAMS()}" ;
+           String str = "";
+           try {
+               PreparedStatement ptsm = conn.prepareStatement(sql);
+               ResultSet rs = ptsm.executeQuery();
+               while (rs.next()) {
+                    str += rs.getString("ExamID");
+                    str += "///";
+                    str += rs.getString("Exam");
+                    str += "///";
+                    str += rs.getString("HoTen");
+                    str += "///";
+                    str += rs.getString("SoCauHoi");
+                    str += "///";
+                    str += rs.getString("ThoiGianThi");
+                    str += "///";
+               }
+               System.out.println(str);
+           } catch (SQLException ex) {
+               System.out.println(ex.toString());
+           }
+           return str;
+   }
     public static boolean insertThongTin(String s, String s1, String s2) {
         boolean check = false;
         Connection conn = getConnection();
@@ -134,6 +159,6 @@ public class ConnectDB {
     }
 
     public static void main(String[] args) {
-        System.out.println(getAllCauHoi());
+        System.out.println(getAllExams());
     }
 }

@@ -100,6 +100,12 @@ public class ServerThread implements Runnable {
                         }
                     }
                     break;
+                case 6:
+                    System.out.println("Có Client đang thi trắc nghiệm...");
+                    String strBoDe = ConnectDB.getAllExams();
+                    System.out.println(strBoDe);
+                    dos.writeUTF(strBoDe);
+                    break;
             }
         } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);

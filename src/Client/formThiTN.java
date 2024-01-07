@@ -30,10 +30,12 @@ public final class formThiTN extends javax.swing.JFrame {
     int soCau = 0;
     private static int timer = 30;
     int current = -1;
+    int current1 = -1;
     int dem = 0;
+    String DapAn;
     ArrayList<CauHoi> listCauhoi = null;
     ArrayList cauChon = null;
-
+    ArrayList<String> Answer = new ArrayList<>();
     /**
      * Creates new form formThiTracNghiem
      */
@@ -76,7 +78,7 @@ public final class formThiTN extends javax.swing.JFrame {
             Logger.getLogger(formThiTN.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     private void cauHoiKeTiep() throws IOException, InterruptedException {
         timer = 30;
         current++;
@@ -112,6 +114,7 @@ public final class formThiTN extends javax.swing.JFrame {
             jRadioButtonCauC.setText("C. " + CH.getCauC());
             System.out.println("D. " + CH.getCauD());
             jRadioButtonCauD.setText("D. " + CH.getCauD());
+            DapAn = Answer.get(current);
             if (dem == soCau) {
                 jButtonTiepTheo.setText("NỘP BÀI");
             }
@@ -146,16 +149,20 @@ public final class formThiTN extends javax.swing.JFrame {
             int dem = 0;
             for (i = 0; i < arrStr.length; i += 7) {
                 if (dem < 10) {
-                    CauHoi CH = new CauHoi();
+                    CauHoi CH = new CauHoi();                    
                     CH.setCauHoi(Integer.parseInt(arrStr[i]));
                     CH.setNoiDung(arrStr[i + 1]);
                     CH.setCauA(arrStr[i + 2]);
                     CH.setCauB(arrStr[i + 3]);
                     CH.setCauC(arrStr[i + 4]);
                     CH.setCauD(arrStr[i + 5]);
+                    Answer.add(arrStr[i + 6]);                
                     listCauhoi.add(CH);
                 }
                 dem++;
+            }
+            for (int j = 0; j < 10; j++) {
+                System.out.println(Answer.get(j));
             }
             soCau = listCauhoi.size();
             cauHoiKeTiep();
@@ -165,7 +172,34 @@ public final class formThiTN extends javax.swing.JFrame {
             Logger.getLogger(formThiTN.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public void KetQua() throws IOException, InterruptedException {
+        
+        current1++;        
+        String dapan = Answer.get(current1);
+        if ("A".equals(DapAn)) {
+            jRadioButtonCauA.setForeground(Color.GREEN);
+            jRadioButtonCauB.setForeground(Color.RED);
+            jRadioButtonCauC.setForeground(Color.RED);
+            jRadioButtonCauD.setForeground(Color.RED);
+        } else if ("B".equals(DapAn)) {
+            jRadioButtonCauA.setForeground(Color.RED);
+            jRadioButtonCauB.setForeground(Color.GREEN);
+            jRadioButtonCauC.setForeground(Color.RED);
+            jRadioButtonCauD.setForeground(Color.RED);
+        } else if ("C".equals(DapAn)) {
+            jRadioButtonCauA.setForeground(Color.RED);
+            jRadioButtonCauB.setForeground(Color.RED);
+            jRadioButtonCauC.setForeground(Color.GREEN);
+            jRadioButtonCauD.setForeground(Color.RED);
+        } else if ("D".equals(DapAn)) {
+            jRadioButtonCauA.setForeground(Color.RED);
+            jRadioButtonCauB.setForeground(Color.RED);
+            jRadioButtonCauC.setForeground(Color.RED);
+            jRadioButtonCauD.setForeground(Color.GREEN);
+        }
+        
 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -199,18 +233,38 @@ public final class formThiTN extends javax.swing.JFrame {
         buttonGroupDapAn.add(jRadioButtonCauA);
         jRadioButtonCauA.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jRadioButtonCauA.setText("A.");
+        jRadioButtonCauA.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonCauAActionPerformed(evt);
+            }
+        });
 
         buttonGroupDapAn.add(jRadioButtonCauB);
         jRadioButtonCauB.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jRadioButtonCauB.setText("B.");
+        jRadioButtonCauB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonCauBActionPerformed(evt);
+            }
+        });
 
         buttonGroupDapAn.add(jRadioButtonCauC);
         jRadioButtonCauC.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jRadioButtonCauC.setText("C.");
+        jRadioButtonCauC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonCauCActionPerformed(evt);
+            }
+        });
 
         buttonGroupDapAn.add(jRadioButtonCauD);
         jRadioButtonCauD.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jRadioButtonCauD.setText("D.");
+        jRadioButtonCauD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonCauDActionPerformed(evt);
+            }
+        });
 
         jLabelCauHoi.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabelCauHoi.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -226,59 +280,59 @@ public final class formThiTN extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGap(0, 0, Short.MAX_VALUE)
-                                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jRadioButtonCauD, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(jRadioButtonCauC, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(jRadioButtonCauB, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(jRadioButtonCauA, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(jLabelCauHoi, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(50, 50, 50)))
-                                .addContainerGap())
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(405, 405, 405)
-                                .addComponent(jButtonTiepTheo, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(405, 405, 405))
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jRadioButtonCauD, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jRadioButtonCauC, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jRadioButtonCauB, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jRadioButtonCauA, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelCauHoi, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(50, 50, 50)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(405, 405, 405)
+                .addComponent(jButtonTiepTheo, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(405, 405, 405))
         );
         jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
-                                .addComponent(jLabelCauHoi, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jRadioButtonCauA, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(32, 32, 32)
-                                .addComponent(jRadioButtonCauB, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
-                                .addComponent(jRadioButtonCauC, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                                .addComponent(jRadioButtonCauD, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
-                                .addComponent(jButtonTiepTheo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(42, 42, 42))
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(jLabelCauHoi, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jRadioButtonCauA, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addComponent(jRadioButtonCauB, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(jRadioButtonCauC, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addComponent(jRadioButtonCauD, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addComponent(jButtonTiepTheo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(42, 42, 42))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -294,6 +348,43 @@ public final class formThiTN extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(formThiTN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonTiepTheoActionPerformed
+    
+    private void jRadioButtonCauAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonCauAActionPerformed
+       try {
+            // TODO add your handling code here:
+            KetQua();
+        } catch (IOException ex) {
+            Logger.getLogger(formThiTN.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(formThiTN.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jRadioButtonCauAActionPerformed
+
+    private void jRadioButtonCauBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonCauBActionPerformed
+        try {
+            // TODO add your handling code here:
+            KetQua();
+        } catch (IOException ex) {
+            Logger.getLogger(formThiTN.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(formThiTN.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jRadioButtonCauBActionPerformed
+
+    private void jRadioButtonCauCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonCauCActionPerformed
+        try {
+            // TODO add your handling code here:
+            KetQua();
+        } catch (IOException ex) {
+            Logger.getLogger(formThiTN.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(formThiTN.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jRadioButtonCauCActionPerformed
+
+    private void jRadioButtonCauDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonCauDActionPerformed
+        
+    }//GEN-LAST:event_jRadioButtonCauDActionPerformed
 
     /**
      * @param args the command line arguments

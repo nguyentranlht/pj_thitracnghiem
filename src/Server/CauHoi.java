@@ -72,4 +72,13 @@ public class CauHoi {
     public void setCauD(String CauD) {
         this.CauD = CauD;
     }
+
+    public void setDapAn(String dapAn) {
+        this.dapAn = dapAn;
+    }
+
+    public String getDapAn() {
+        return dapAn;
+    }
+    
 }

@@ -6,6 +6,7 @@
 package Client;
 
 import Server.CauHoi;
+import Server.Exams;
 import Server.KetQua;
 import java.awt.Color;
 import java.awt.Font;
@@ -17,10 +18,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -38,7 +42,7 @@ public class formDisplay extends javax.swing.JFrame {
     private static int timer = 30;
     int current = -1;
     int dem = 0;
-    ArrayList<CauHoi> listCauhoi = null;
+    ArrayList<Exams> listDe = null;
     ArrayList cauChon = null;
     public formDisplay() {
         initComponents();
@@ -59,6 +63,8 @@ public class formDisplay extends javax.swing.JFrame {
         tabControl = new javax.swing.JTabbedPane();
         tabQLDT = new javax.swing.JPanel();
         tabThi = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblBoDe = new javax.swing.JTable();
         tabUser = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -104,15 +110,64 @@ public class formDisplay extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane1.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jScrollPane1AncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        jScrollPane1.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                jScrollPane1ComponentShown(evt);
+            }
+        });
+
+        tblBoDe.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Tiêu Đề", "Người Tạo", "Số Câu", "Thời Gian"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblBoDe.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblBoDeMouseClicked(evt);
+            }
+        });
+        tblBoDe.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                tblBoDeComponentShown(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblBoDe);
+
         javax.swing.GroupLayout tabThiLayout = new javax.swing.GroupLayout(tabThi);
         tabThi.setLayout(tabThiLayout);
         tabThiLayout.setHorizontalGroup(
             tabThiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1027, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabThiLayout.createSequentialGroup()
+                .addContainerGap(35, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 963, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29))
         );
         tabThiLayout.setVerticalGroup(
             tabThiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 650, Short.MAX_VALUE)
+            .addGroup(tabThiLayout.createSequentialGroup()
+                .addGap(63, 63, 63)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(187, Short.MAX_VALUE))
         );
 
         tabControl.addTab("          Thi         ", new javax.swing.ImageIcon(getClass().getResource("/image/thi.png")), tabThi, ""); // NOI18N
@@ -289,6 +344,65 @@ public class formDisplay extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tabThiComponentShown
 
+    private void jScrollPane1ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jScrollPane1ComponentShown
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jScrollPane1ComponentShown
+
+    private void jScrollPane1AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jScrollPane1AncestorAdded
+        // TODO add your handling code here
+    }//GEN-LAST:event_jScrollPane1AncestorAdded
+
+    private void tblBoDeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBoDeMouseClicked
+        // TODO add your handling code here:
+//        int viTriDongVuaBam = tblBoDe.getSelectedRow();
+//        ckbStatus.setSelected((boolean)tblBoDe.getValueAt(viTriDongVuaBam, 1));
+//        setSelectedCombobox(tblBoDe.getValueAt(viTriDongVuaBam, 2).toString(),cmbCatagory);
+//        txtID.setText(tblBoDe.getValueAt(viTriDongVuaBam, 3).toString());
+//        txtItem.setText(tblBoDe.getValueAt(viTriDongVuaBam, 4).toString());
+//        spinPrice.setValue(tblBoDe.getValueAt(viTriDongVuaBam, 5));
+//        cmbUnit.setSelectedItem(tblBoDe.getValueAt(viTriDongVuaBam, 6).toString());
+//        txtCmt.setText(tblBoDe.getValueAt(viTriDongVuaBam, 7).toString());
+    }//GEN-LAST:event_tblBoDeMouseClicked
+
+    private void tblBoDeComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tblBoDeComponentShown
+        // TODO add your handling code here:
+        System.out.println("Client.formDisplay.tblBoDeComponentShown()");
+        ListBoDe();
+    }//GEN-LAST:event_tblBoDeComponentShown
+   public void ListBoDe() {
+        try {
+            socket = new Socket("localhost", 8000);
+            dis = new DataInputStream(socket.getInputStream());
+            dos = new DataOutputStream(socket.getOutputStream());
+            String flag = "6";
+            dos.writeUTF(flag);
+            String receive = dis.readUTF();
+            String[] arrStr = receive.split("///");
+            DefaultTableModel model = new DefaultTableModel();
+            model.addColumn("Dữ liệu");
+
+            for (String value : arrStr) {
+                model.addRow(new Object[]{value});
+            }
+
+            tblBoDe.setModel(model);
+
+//            DefaultTableModel tableModel = (DefaultTableModel)tblBoDe.getModel();
+//            tableModel.setRowCount(0);
+//            for (int i = 0; i < arrStr.length; i += 5) {
+//                Object[] item = new Object[5];                    
+//                item[0] =(Integer.parseInt(arrStr[i]));
+//                item[1] =(arrStr[i+1]);
+//                item[2] =(arrStr[i+2]);
+//                item[3] =(Integer.parseInt(arrStr[i+3]));
+//                item[4] =((arrStr[i+4]));
+//                tableModel.addRow(item);
+//            }  
+//            tblBoDe.setModel(tableModel);
+        } catch (IOException ex) {
+            Logger.getLogger(formClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -339,12 +453,14 @@ public class formDisplay extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JRadioButton rbtnFmale;
     private javax.swing.JRadioButton rbtnMale;
     private javax.swing.JTabbedPane tabControl;
     private javax.swing.JPanel tabQLDT;
     private javax.swing.JPanel tabThi;
     private javax.swing.JPanel tabUser;
+    private javax.swing.JTable tblBoDe;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtName;
