@@ -64,8 +64,11 @@ public class ServerThread implements Runnable {
                     }
                     break;
                 case 4:
+                    String[] arrStr2 = receive.split("///");
+                    int made = Integer.parseInt(arrStr2[1]);
+                    int socau = Integer.parseInt(arrStr2[2]);
                     System.out.println("Có Client đang thi trắc nghiệm...");
-                    String strCauHoi = ConnectDB.getAllCauHoi();
+                    String strCauHoi = ConnectDB.getAllCauHoi(made, socau);
                     String arrCauHoi[] = strCauHoi.split("///");
                     dos.writeUTF(strCauHoi);
                     String receiveAnswer = dis.readUTF();
@@ -73,10 +76,10 @@ public class ServerThread implements Runnable {
                     String arrAnswer[] = receiveAnswer.split("///");
                     int cauDung = 0;
                     ArrayList<String> Answer = new ArrayList<>();
-                    for (int i = 0; i < arrCauHoi.length; i += 7) {
-                        Answer.add(arrCauHoi[i + 6]);
-                    }
-                    System.out.println(Answer);
+                    for (int i = 0; i < arrCauHoi.length; i += 7) {              
+                        Answer.add(arrCauHoi[i + 6].trim());
+                    }            
+                    System.out.println(receiveAnswer);
                     for (int i = 0; i < arrAnswer.length; i++) {
                         if (Answer.get(i).equals(arrAnswer[i])) {
                             cauDung++;

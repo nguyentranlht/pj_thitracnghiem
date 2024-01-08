@@ -6,7 +6,7 @@ package Client;
 
 import Server.CauHoi;
 import Server.KetQua;
-
+import Server.Exams;
 import javax.swing.*;
 import java.awt.*;
 import java.io.DataInputStream;
@@ -28,14 +28,14 @@ public final class formThiTN extends javax.swing.JFrame {
     DataInputStream dis;
     DataOutputStream dos;
     int soCau = 0;
-    private static int timer = 30;
+    private static int timer ;
     int current = -1;
-    int current1 = -1;
     int dem = 0;
     String DapAn;
     ArrayList<CauHoi> listCauhoi = null;
     ArrayList cauChon = null;
     ArrayList<String> Answer = new ArrayList<>();
+
     /**
      * Creates new form formThiTracNghiem
      */
@@ -45,32 +45,33 @@ public final class formThiTN extends javax.swing.JFrame {
         this.setTitle("THI TRẮC NGHIỆM");
         listCauhoi = new ArrayList();
         cauChon = new ArrayList();
-        ThiTracNghiem();
+        timer = Exams.thoigian;        
+        ThiTracNghiem(Exams.made, Exams.socau);
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        String time = " Timer : " + timer;
+        int minutes = timer / 60; // Chia timer cho 60 để lấy phút
+        int seconds = timer % 60; // Lấy phần dư để lấy giây
+
+        String time = " Timer : " + minutes + " phút " + seconds + " giây";
         g.setColor(Color.RED);
         g.setFont(new Font("Tahoma", Font.BOLD, 21));
 
         if (timer > 0) {
             g.drawString(time, 30, 80);
         } else {
-            g.drawString("Times up", 30, 80);
-            timer = 31;
+            g.drawString("Hết giờ", 30, 80);
+            //timer = 31 * 60; // Reset timer về 31 phút
             try {
-                try {
-                    cauHoiKeTiep();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(formThiTN.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } catch (IOException ex) {
+                cauHoiKeTiep();
+            } catch (InterruptedException | IOException ex) {
                 Logger.getLogger(formThiTN.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        timer--;
+        timer--; // Giảm timer đi 1 giây
+
         try {
             Thread.sleep(1000);
             repaint();
@@ -78,22 +79,29 @@ public final class formThiTN extends javax.swing.JFrame {
             Logger.getLogger(formThiTN.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void cauHoiKeTiep() throws IOException, InterruptedException {
-        timer = 30;
         current++;
+        jRadioButtonCauA.setForeground(Color.BLACK);
+        jRadioButtonCauB.setForeground(Color.BLACK);
+        jRadioButtonCauC.setForeground(Color.BLACK);
+        jRadioButtonCauD.setForeground(Color.BLACK);
         if (current > 0) {
             if (jRadioButtonCauA.isSelected()) {
+                jRadioButtonCauA.setSelected(false);
                 cauChon.add("A");
                 System.out.println("Ban vua chon dap an A\n");
             } else if (jRadioButtonCauB.isSelected()) {
+                jRadioButtonCauB.setSelected(false);
                 cauChon.add("B");
                 System.out.println("Ban vua chon dap an B\n");
             } else if (jRadioButtonCauC.isSelected()) {
+                jRadioButtonCauC.setSelected(false);
                 cauChon.add("C");
                 System.out.println("Ban vua chon dap an C\n");
             } else if (jRadioButtonCauD.isSelected()) {
                 cauChon.add("D");
+                jRadioButtonCauD.setSelected(false);
                 System.out.println("Ban vua chon dap an D\n");
             } else {
                 cauChon.add("E");
@@ -126,7 +134,6 @@ public final class formThiTN extends javax.swing.JFrame {
             dos.writeUTF(send);
             String diem = dis.readUTF();
             System.out.println("Điểm của bạn là: " + diem);
-            KetQua.diem = diem;
             KetQua.soCauDung = diem;
             JOptionPane.showMessageDialog(null, "Bạn đã hoàn thành bài thi!! Nộp bài!");
             this.setVisible(false);
@@ -136,34 +143,37 @@ public final class formThiTN extends javax.swing.JFrame {
         }
     }
 
-    public void ThiTracNghiem() {
+    public void ThiTracNghiem(int made, int socau) {
         try {
             socket = new Socket("localhost", 8000);
             dis = new DataInputStream(socket.getInputStream());
             dos = new DataOutputStream(socket.getOutputStream());
             String flag = "4";
+            flag += "///";
+            flag += made;
+            flag += "///";
+            flag += socau;
+            flag += "///";
             dos.writeUTF(flag);
             String receive = dis.readUTF();
             String[] arrStr = receive.split("///");
             int i = 0;
             int dem = 0;
             for (i = 0; i < arrStr.length; i += 7) {
-                if (dem < 10) {
-                    CauHoi CH = new CauHoi();                    
+                if (dem < socau) {
+                    CauHoi CH = new CauHoi();
                     CH.setCauHoi(Integer.parseInt(arrStr[i]));
                     CH.setNoiDung(arrStr[i + 1]);
                     CH.setCauA(arrStr[i + 2]);
                     CH.setCauB(arrStr[i + 3]);
                     CH.setCauC(arrStr[i + 4]);
                     CH.setCauD(arrStr[i + 5]);
-                    Answer.add(arrStr[i + 6]);                
+                    Answer.add(arrStr[i + 6]);
                     listCauhoi.add(CH);
                 }
                 dem++;
             }
-            for (int j = 0; j < 10; j++) {
-                System.out.println(Answer.get(j));
-            }
+
             soCau = listCauhoi.size();
             cauHoiKeTiep();
         } catch (IOException ex) {
@@ -172,34 +182,33 @@ public final class formThiTN extends javax.swing.JFrame {
             Logger.getLogger(formThiTN.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     public void KetQua() throws IOException, InterruptedException {
-        
-        current1++;        
-        String dapan = Answer.get(current1);
-        if ("A".equals(DapAn)) {
-            jRadioButtonCauA.setForeground(Color.GREEN);
-            jRadioButtonCauB.setForeground(Color.RED);
-            jRadioButtonCauC.setForeground(Color.RED);
-            jRadioButtonCauD.setForeground(Color.RED);
-        } else if ("B".equals(DapAn)) {
-            jRadioButtonCauA.setForeground(Color.RED);
-            jRadioButtonCauB.setForeground(Color.GREEN);
-            jRadioButtonCauC.setForeground(Color.RED);
-            jRadioButtonCauD.setForeground(Color.RED);
-        } else if ("C".equals(DapAn)) {
-            jRadioButtonCauA.setForeground(Color.RED);
-            jRadioButtonCauB.setForeground(Color.RED);
-            jRadioButtonCauC.setForeground(Color.GREEN);
-            jRadioButtonCauD.setForeground(Color.RED);
-        } else if ("D".equals(DapAn)) {
-            jRadioButtonCauA.setForeground(Color.RED);
-            jRadioButtonCauB.setForeground(Color.RED);
-            jRadioButtonCauC.setForeground(Color.RED);
-            jRadioButtonCauD.setForeground(Color.GREEN);
+        jRadioButtonCauA.setForeground(Color.RED);
+        jRadioButtonCauB.setForeground(Color.RED);
+        jRadioButtonCauC.setForeground(Color.RED);
+        jRadioButtonCauD.setForeground(Color.RED);
+        String dapan = Answer.get(current).trim();
+        System.out.println(dapan);
+        switch (dapan) {
+            case "A":
+                jRadioButtonCauA.setForeground(Color.GREEN);
+                break;
+            case "B":
+                jRadioButtonCauB.setForeground(Color.GREEN);
+                break;
+            case "C":
+                jRadioButtonCauC.setForeground(Color.GREEN);
+                break;
+            case "D":
+                jRadioButtonCauD.setForeground(Color.GREEN);
+                break;
+            default:
+                break;
         }
-        
 
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -348,9 +357,9 @@ public final class formThiTN extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(formThiTN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonTiepTheoActionPerformed
-    
+
     private void jRadioButtonCauAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonCauAActionPerformed
-       try {
+        try {
             // TODO add your handling code here:
             KetQua();
         } catch (IOException ex) {
@@ -383,7 +392,7 @@ public final class formThiTN extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButtonCauCActionPerformed
 
     private void jRadioButtonCauDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonCauDActionPerformed
-        
+
     }//GEN-LAST:event_jRadioButtonCauDActionPerformed
 
     /**

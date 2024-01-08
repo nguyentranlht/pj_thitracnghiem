@@ -9,6 +9,7 @@ package Server;
  *
  */
 public class User {
+    public static String Email,MatKhau,TenDayDu;
     private String email,matKhau,tenDayDu;
     private boolean gioiTinh;
 
@@ -21,7 +22,9 @@ public class User {
         this.tenDayDu = tenDayDu;
         this.gioiTinh = gioiTinh;
     }
-
+    public boolean getGioiTinh() {
+        return gioiTinh;
+    }
     public String getEmail() {
         return email;
     }
@@ -33,7 +36,7 @@ public class User {
     public String getTenDayDu() {
         return tenDayDu;
     }
-
+ 
     public void setEmail(String email) {
         this.email = email;
     }

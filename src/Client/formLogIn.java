@@ -198,6 +198,8 @@ public class formLogIn extends javax.swing.JFrame {
                 System.out.println(receive);
                 if ("Connected".equals(receive)) {
                         JOptionPane.showMessageDialog(this, "ĐĂNG NHẬP THÀNH CÔNG");
+                        User.Email = txtEmail.getText();
+                        User.MatKhau = txtPassword.getText();
                         this.setVisible(false);
                         formDisplay DP = new formDisplay();
                         DP.show();

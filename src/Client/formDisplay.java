@@ -7,7 +7,6 @@ package Client;
 
 import Server.CauHoi;
 import Server.Exams;
-import Server.KetQua;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -99,7 +98,7 @@ public class formDisplay extends javax.swing.JFrame {
         );
         tabQLDTLayout.setVerticalGroup(
             tabQLDTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 650, Short.MAX_VALUE)
+            .addGap(0, 655, Short.MAX_VALUE)
         );
 
         tabControl.addTab("Quản Lý Đề Thi", new javax.swing.ImageIcon(getClass().getResource("/image/quanly.png")), tabQLDT); // NOI18N
@@ -167,7 +166,7 @@ public class formDisplay extends javax.swing.JFrame {
             .addGroup(tabThiLayout.createSequentialGroup()
                 .addGap(63, 63, 63)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(187, Short.MAX_VALUE))
+                .addContainerGap(192, Short.MAX_VALUE))
         );
 
         tabControl.addTab("          Thi         ", new javax.swing.ImageIcon(getClass().getResource("/image/thi.png")), tabThi, ""); // NOI18N
@@ -286,7 +285,7 @@ public class formDisplay extends javax.swing.JFrame {
             .addGroup(tabUserLayout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(56, 56, 56))
         );
@@ -301,7 +300,7 @@ public class formDisplay extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 650, Short.MAX_VALUE)
+            .addGap(0, 655, Short.MAX_VALUE)
         );
 
         tabControl.addTab("   Thống Kê    ", new javax.swing.ImageIcon(getClass().getResource("/image/thongke.png")), jPanel5); // NOI18N
@@ -342,6 +341,7 @@ public class formDisplay extends javax.swing.JFrame {
 
     private void tabThiComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tabThiComponentShown
         // TODO add your handling code here:
+        ListBoDe();
     }//GEN-LAST:event_tabThiComponentShown
 
     private void jScrollPane1ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jScrollPane1ComponentShown
@@ -354,20 +354,18 @@ public class formDisplay extends javax.swing.JFrame {
 
     private void tblBoDeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBoDeMouseClicked
         // TODO add your handling code here:
-//        int viTriDongVuaBam = tblBoDe.getSelectedRow();
-//        ckbStatus.setSelected((boolean)tblBoDe.getValueAt(viTriDongVuaBam, 1));
-//        setSelectedCombobox(tblBoDe.getValueAt(viTriDongVuaBam, 2).toString(),cmbCatagory);
-//        txtID.setText(tblBoDe.getValueAt(viTriDongVuaBam, 3).toString());
-//        txtItem.setText(tblBoDe.getValueAt(viTriDongVuaBam, 4).toString());
-//        spinPrice.setValue(tblBoDe.getValueAt(viTriDongVuaBam, 5));
-//        cmbUnit.setSelectedItem(tblBoDe.getValueAt(viTriDongVuaBam, 6).toString());
-//        txtCmt.setText(tblBoDe.getValueAt(viTriDongVuaBam, 7).toString());
+        int viTriDongVuaBam = tblBoDe.getSelectedRow();
+        Exams.made = ((int)tblBoDe.getValueAt(viTriDongVuaBam, 0));
+        Exams.socau = ((int)tblBoDe.getValueAt(viTriDongVuaBam, 3));
+        Exams.thoigian = ((int)(tblBoDe.getValueAt(viTriDongVuaBam, 4)));
+        this.setVisible(false);
+        formThiTN Thi = new formThiTN();
+        Thi.show();
     }//GEN-LAST:event_tblBoDeMouseClicked
 
     private void tblBoDeComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tblBoDeComponentShown
         // TODO add your handling code here:
-        System.out.println("Client.formDisplay.tblBoDeComponentShown()");
-        ListBoDe();
+        
     }//GEN-LAST:event_tblBoDeComponentShown
    public void ListBoDe() {
         try {
@@ -378,27 +376,18 @@ public class formDisplay extends javax.swing.JFrame {
             dos.writeUTF(flag);
             String receive = dis.readUTF();
             String[] arrStr = receive.split("///");
-            DefaultTableModel model = new DefaultTableModel();
-            model.addColumn("Dữ liệu");
-
-            for (String value : arrStr) {
-                model.addRow(new Object[]{value});
-            }
-
-            tblBoDe.setModel(model);
-
-//            DefaultTableModel tableModel = (DefaultTableModel)tblBoDe.getModel();
-//            tableModel.setRowCount(0);
-//            for (int i = 0; i < arrStr.length; i += 5) {
-//                Object[] item = new Object[5];                    
-//                item[0] =(Integer.parseInt(arrStr[i]));
-//                item[1] =(arrStr[i+1]);
-//                item[2] =(arrStr[i+2]);
-//                item[3] =(Integer.parseInt(arrStr[i+3]));
-//                item[4] =((arrStr[i+4]));
-//                tableModel.addRow(item);
-//            }  
-//            tblBoDe.setModel(tableModel);
+            DefaultTableModel tableModel = (DefaultTableModel)tblBoDe.getModel();
+            tableModel.setRowCount(0);
+            for (int i = 0; i < arrStr.length; i += 5) {
+                Object[] item = new Object[5];                    
+                item[0] =(Integer.parseInt(arrStr[i]));
+                item[1] =(arrStr[i+1]);
+                item[2] =(arrStr[i+2]);
+                item[3] =(Integer.parseInt(arrStr[i+3]));
+                item[4] =(Integer.parseInt(arrStr[i+4]));
+                tableModel.addRow(item);
+            }  
+            tblBoDe.setModel(tableModel);
         } catch (IOException ex) {
             Logger.getLogger(formClient.class.getName()).log(Level.SEVERE, null, ex);
         }

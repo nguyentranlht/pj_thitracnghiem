@@ -10,6 +10,9 @@ package Server;
  * @author PC
  */
 public class Exams {
+    public static int thoigian;
+    public static int socau;
+    public static int made;
     public String tieuDe, nguoiTao;
     public int examID, soCau, thoiGian;
 

@@ -89,15 +89,15 @@ public class ConnectDB {
         return check;
     }
 
-    public static String getAllCauHoi() {
-        int[] soCau = new int[40];
+    public static String getAllCauHoi(int made, int socau) {
+        int[] soCau = new int[socau];
         Arrays.fill(soCau, 0);
         Connection conn = getConnection();
-        String sql = "{CALL GETTABLEQUESTION()}";
+        String sql = "{CALL GETTABLEQUESTION(?)}";
         Random rand = new Random();
         int dem = 0;
-        while (dem < 10) {
-            int k = rand.nextInt(32);
+        while (dem < socau) {
+            int k = rand.nextInt(socau);
             if (soCau[k] != 1) {
                 soCau[k] = 1;
                 dem++;
@@ -106,8 +106,9 @@ public class ConnectDB {
         dem = -1;
         String str = "";
         try {
-            PreparedStatement ptsm = conn.prepareStatement(sql);
-            ResultSet rs = ptsm.executeQuery();
+            CallableStatement callableStatement = conn.prepareCall(sql);
+            callableStatement.setInt(1, made);  // Thiết lập giá trị cho tham số 1
+            ResultSet rs = callableStatement.executeQuery();// Thực thi Stored Procedure          
             while (rs.next()) {
                 dem++;
                 if (soCau[dem] > 0) {

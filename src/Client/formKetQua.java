@@ -31,15 +31,14 @@ public class formKetQua extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setTitle("THI TRẮC NGHIỆM");
-        URL urlIcon = formClient.class.getResource("icon.png");
-        Image img = Toolkit.getDefaultToolkit().createImage(urlIcon);
-        this.setIconImage(img);
-        jLabelDiem.setText("ĐIỂM CỦA BẠN : " + KetQua.diem);
+        float diemchuan = ((10/Float.parseFloat(KetQua.soCauDung))* Float.parseFloat(KetQua.soCauDung));
+        KetQua.diem = String.valueOf(diemchuan);
+        jLabelDiem.setText("ĐIỂM CỦA BẠN : " + diemchuan);
         jLabelHoTen.setText("Họ và tên: " + ThongTinSV.hoTen);
         jLabelMSSV.setText("Mã số sinh viên: " + ThongTinSV.mssv);
         jLabelSDT.setText("Số điện thoại: " + ThongTinSV.sdt);
         jLabelNgayThi.setText("Ngày thi: " + formatNgayThi);
-        jLabelCauDung.setText("SỐ CÂU ĐÚNG : " + KetQua.soCauDung + "/10");
+        jLabelCauDung.setText("SỐ CÂU ĐÚNG : " + KetQua.soCauDung);
 
         ConnectDB.updateCore(ThongTinSV.mssv, Integer.parseInt(KetQua.diem), now.toString());
 
@@ -162,8 +161,9 @@ public class formKetQua extends javax.swing.JFrame {
 
     private void jButtonThoatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonThoatActionPerformed
         // TODO add your handling code here:
-        JFrame Frame = new JFrame("Exit");
-        System.exit(0);
+        this.setVisible(false);
+        formDisplay DP = new formDisplay();
+        DP.setVisible(true);
     }//GEN-LAST:event_jButtonThoatActionPerformed
 
     /**
