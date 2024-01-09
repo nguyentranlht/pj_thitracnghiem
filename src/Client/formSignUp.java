@@ -5,17 +5,24 @@
  */
 package Client;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author PC
  */
 public class formSignUp extends javax.swing.JFrame {
-
+    private String otpReceiver;
     /**
      * Creates new form formSignUp
      */
     public formSignUp() {
         initComponents();
+        dateChooser.setDateFormatString("yyyy-MM-dd");
     }
 
     /**
@@ -28,6 +35,10 @@ public class formSignUp extends javax.swing.JFrame {
     private void initComponents() {
 
         btnGender = new javax.swing.ButtonGroup();
+        dialogOTP = new javax.swing.JDialog();
+        txtOTP = new javax.swing.JTextField();
+        btnXN = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -45,6 +56,51 @@ public class formSignUp extends javax.swing.JFrame {
         dateChooser = new com.toedter.calendar.JDateChooser();
         btnSignUp = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
+
+        dialogOTP.setSize(new java.awt.Dimension(400, 400));
+
+        btnXN.setText("Xác thực");
+        btnXN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXNActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 3, 24)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("XÁC THỰC OTP");
+
+        javax.swing.GroupLayout dialogOTPLayout = new javax.swing.GroupLayout(dialogOTP.getContentPane());
+        dialogOTP.getContentPane().setLayout(dialogOTPLayout);
+        dialogOTPLayout.setHorizontalGroup(
+            dialogOTPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dialogOTPLayout.createSequentialGroup()
+                .addGroup(dialogOTPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(dialogOTPLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE))
+                    .addGroup(dialogOTPLayout.createSequentialGroup()
+                        .addGroup(dialogOTPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(dialogOTPLayout.createSequentialGroup()
+                                .addGap(96, 96, 96)
+                                .addComponent(txtOTP, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(dialogOTPLayout.createSequentialGroup()
+                                .addGap(126, 126, 126)
+                                .addComponent(btnXN)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        dialogOTPLayout.setVerticalGroup(
+            dialogOTPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dialogOTPLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(txtOTP, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnXN)
+                .addContainerGap(241, Short.MAX_VALUE))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -64,13 +120,26 @@ public class formSignUp extends javax.swing.JFrame {
 
         jLabel7.setText("Ngày Sinh");
 
+        txtCFPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCFPasswordActionPerformed(evt);
+            }
+        });
+
         btnGender.add(rbtnMale);
         rbtnMale.setText("Nam");
 
         btnGender.add(rbtnFmale);
         rbtnFmale.setText("Nữ");
 
+        dateChooser.setDateFormatString("yyyy-MM-dd");
+
         btnSignUp.setText("Đăng ký");
+        btnSignUp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSignUpActionPerformed(evt);
+            }
+        });
 
         btnExit.setText("Thoát");
 
@@ -171,6 +240,88 @@ public class formSignUp extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnSignUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignUpActionPerformed
+        // TODO add your handling code here:
+        char[] pw = txtPassword.getPassword();
+        char[] cfpw = txtCFPassword.getPassword();
+        System.out.println(new String(pw));
+        try {
+            if(txtEmail.getText().contains("@") && String.valueOf(txtPassword.getPassword()).equals(String.valueOf(txtCFPassword.getPassword()))){
+                Socket socket = new Socket("localhost", 8000);
+                DataInputStream dis = new DataInputStream(socket.getInputStream());
+                DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+                String send = "3///";
+                send += txtEmail.getText();
+                send += "///";
+                dos.writeUTF(send);
+                otpReceiver = dis.readUTF();
+                dialogOTP.show();
+            }
+            else{
+                if(!txtEmail.getText().contains("@")){
+                    JOptionPane.showMessageDialog(this, "Email không hợp lệ");
+                }
+                else if(!String.valueOf(txtPassword.getPassword()).equals(String.valueOf(txtCFPassword.getPassword()))){
+                    JOptionPane.showMessageDialog(this, "Mật khẩu không trùng khớp");
+                }
+            }
+
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btnSignUpActionPerformed
+
+    private void btnXNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXNActionPerformed
+        // TODO add your handling code here:
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String dob = inputDateFormat.format(dateChooser.getDate());
+        System.out.println(dob);
+        try {
+            System.out.println(otpReceiver);
+            Socket socket = new Socket("localhost", 8000);
+            DataInputStream dis = new DataInputStream(socket.getInputStream());
+            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+            if(txtOTP.getText().trim().equals(otpReceiver)){
+                String send = "10///";
+                send += String.valueOf(txtPassword.getPassword());
+                send += "///";
+                send += txtName.getText();
+                send += "///";
+                send += txtEmail.getText();
+                send += "///";
+                if(rbtnMale.isSelected()){
+                    send += "male";
+                    send += "///";
+                }
+                else{
+                    send += "fmale";
+                    send += "///"; 
+                }
+                send += dob;
+                send += "///";
+                dos.writeUTF(send);
+                String receive = dis.readUTF();
+                if(receive.equals("Inserted")){
+                    JOptionPane.showMessageDialog(this, "Đăng kí thành công");
+                    dialogOTP.dispose();
+                    this.dispose();
+                    formLogIn frm = new formLogIn();
+                    frm.show();
+                }
+                else{
+                    JOptionPane.showMessageDialog(this, "Đăng kí không thành công");
+                }
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Mã xác thực không chính xác");
+            }
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btnXNActionPerformed
+
+    private void txtCFPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCFPasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCFPasswordActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -211,7 +362,9 @@ public class formSignUp extends javax.swing.JFrame {
     private javax.swing.JButton btnExit;
     private javax.swing.ButtonGroup btnGender;
     private javax.swing.JButton btnSignUp;
+    private javax.swing.JButton btnXN;
     private com.toedter.calendar.JDateChooser dateChooser;
+    private javax.swing.JDialog dialogOTP;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -219,12 +372,14 @@ public class formSignUp extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JRadioButton rbtnFmale;
     private javax.swing.JRadioButton rbtnMale;
     private javax.swing.JPasswordField txtCFPassword;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtOTP;
     private javax.swing.JPasswordField txtPassword;
     // End of variables declaration//GEN-END:variables
 }

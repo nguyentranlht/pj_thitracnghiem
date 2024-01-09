@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +22,8 @@ public class ServerThread implements Runnable {
 
     private Socket socket;
     private String name;
+    private String email;
+    private int count = 2;
 
     public ServerThread(Socket socket, String name) throws IOException {
         this.socket = socket;
@@ -56,13 +59,16 @@ public class ServerThread implements Runnable {
                     break;
                 case 3:
                     String[] arrStr = receive.split("///");
-                    System.out.println("Ho ten: " + arrStr[1] + "\nMSSV: " + arrStr[2] + "" + "\nSDT: " + arrStr[3]);
-                    if (ConnectDB.insertThongTin(receiveArray[1], receiveArray[2], receiveArray[3]) == true) {
-                        dos.writeUTF("Success");
-                    } else {
-                        dos.writeUTF("Connected fail");
-                    }
-                    break;
+//                    System.out.println("Ho ten: " + arrStr[1] + "\nMSSV: " + arrStr[2] + "" + "\nSDT: " + arrStr[3]);
+//                    if (ConnectDB.insertThongTin(receiveArray[1], receiveArray[2], receiveArray[3]) == true) {
+//                        dos.writeUTF("Success");
+//                    } else {
+//                        dos.writeUTF("Connected fail");
+//                    }
+//                    break;
+                    String otp = VerifyRegistration.generateOTP();
+                    VerifyRegistration.sendEmail(arrStr[1], otp);
+                    dos.writeUTF(otp);
                 case 4:
                     System.out.println("Có Client đang thi trắc nghiệm...");
                     String strCauHoi = ConnectDB.getAllCauHoi();
@@ -100,8 +106,71 @@ public class ServerThread implements Runnable {
                         }
                     }
                     break;
+                case 6:
+                    String [] arrStr2 = receive.split("///");
+                    email = "leduycoiytb@gmail.com";
+                    String info = ConnectDB.getUserInfo(email);
+                    dos.writeUTF(info);
+                    break;
+                case 7:
+                    String[] req = receive.split("///");
+                    boolean isMale = true ? req[2].equals("1 ") : false;
+                    ConnectDB.updateUser(req[1], isMale, req[3], req[4]);
+                    dos.writeUTF("Updated");
+                    break;
+                case 8:
+                    String[] str8 = receive.split("///");
+                    int examID = Integer.parseInt(str8[1]);
+                    int subjectID = ConnectDB.getSubjectID(str8[2]);
+                    int userID = ConnectDB.getAuthorID(str8[3]);
+                    int kyThiID = ConnectDB.getExamID(str8[4]);
+                    int soCauHoi = Integer.parseInt(str8[5]);
+                    int time = Integer.parseInt(str8[6]);
+                    try {
+                        if(ConnectDB.insertExam(examID, subjectID, userID, kyThiID, soCauHoi ,time) == true){
+                            dos.writeUTF("Inserted");
+                        }
+                        else{
+                            dos.writeUTF("Inserted fail");
+                        }
+                    } catch (Exception e) {
+                        Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, e);
+                    }
+                    break;
+                case 9:
+                    String[] str9 = receive.split("///");
+                    int quesID = Integer.parseInt(str9[1]);
+                    int examid = Integer.parseInt(str9[3]);
+                    try {
+                        if(ConnectDB.insertQues(quesID, str9[2], examid, str9[4], str9[5], str9[6], str9[7], str9[8])== true){
+                            dos.writeUTF("Inserted");
+                        }
+                        else{
+                            dos.writeUTF("Inserted fail");
+                        }
+                    } catch (Exception e) {
+                        Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, e);
+                    }
+                case 10:
+                    String[] user = receive.split("///");
+                    boolean isFMale = true ? user[4].equals("fmale") : false;
+                    try {
+                        if (ConnectDB.insertUser(count,user[1], user[2], user[3], isFMale, user[5].trim()) == true) {
+                            dos.writeUTF("Inserted");
+                            count++;
+                        } else {
+                            dos.writeUTF("Inserted fail");
+                        }
+                    } catch (Exception e) {
+                        Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, e);
+                    }
+                    
             }
         } catch (IOException ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {

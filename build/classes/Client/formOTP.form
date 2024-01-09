@@ -77,6 +77,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="X&#xe1;c th&#x1ef1;c"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnXNActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

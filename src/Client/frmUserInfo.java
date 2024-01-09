@@ -1,47 +1,59 @@
-        /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package Client;
 
-import Server.CauHoi;
-import Server.KetQua;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Toolkit;
+import Server.ConnectDB;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.Socket;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Calendar;
 import javax.swing.JOptionPane;
 
 /**
  *
- * @author PC
+ * @author Le Duy
  */
-public class formDisplay extends javax.swing.JFrame {
+public class frmUserInfo extends javax.swing.JFrame {
 
     /**
-     * Creates new form formDisplay
+     * Creates new form frmUserInfo
      */
-    Socket socket;
-    DataInputStream dis;
-    DataOutputStream dos;
-    int soCau = 0;
-    private static int timer = 30;
-    int current = -1;
-    int dem = 0;
-    ArrayList<CauHoi> listCauhoi = null;
-    ArrayList cauChon = null;
-    public formDisplay() {
+    public frmUserInfo() {
         initComponents();
+        try {
+            Socket socket = new Socket("localhost", 8000);
+            DataInputStream dis = new DataInputStream(socket.getInputStream());
+            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+            String Req = "6///";
+            dos.writeUTF(Req);
+            String receiveEmail = dis.readUTF();
+            String[] info = receiveEmail.split("///");
+            txtID.setText(info[0]);
+            txtName.setText(info[1]);
+            txtEmail.setText(info[2]);
+            if (info[3].equals("1")) {
+                rbtnMale.setSelected(true);
+                rbtnFmale.setSelected(false);
+            }
+            else{
+                rbtnFmale.setSelected(true);
+                rbtnMale.setSelected(false);
+            }
+            String[] strDate = info[4].split("-");
+            dateChooser.setDateFormatString("yyyy-MM-dd");
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Integer.parseInt(strDate[0]), Integer.parseInt(strDate[1])-1, Integer.parseInt(strDate[2]));
+            Date date = calendar.getTime();
+            dateChooser.setDate(date);
+
+        } catch (Exception e) {
+
+        }
     }
 
     /**
@@ -53,13 +65,6 @@ public class formDisplay extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnGender = new javax.swing.ButtonGroup();
-        btnDapAn = new javax.swing.ButtonGroup();
-        jPanel1 = new javax.swing.JPanel();
-        tabControl = new javax.swing.JTabbedPane();
-        tabQLDT = new javax.swing.JPanel();
-        tabThi = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
         tabUser = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -78,57 +83,11 @@ public class formDisplay extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        tabControl.setTabPlacement(javax.swing.JTabbedPane.LEFT);
-        tabControl.addComponentListener(new java.awt.event.ComponentAdapter() {
+        jPanel2.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
-                tabControlComponentShown(evt);
+                jPanel2ComponentShown(evt);
             }
         });
-
-        javax.swing.GroupLayout tabQLDTLayout = new javax.swing.GroupLayout(tabQLDT);
-        tabQLDT.setLayout(tabQLDTLayout);
-        tabQLDTLayout.setHorizontalGroup(
-            tabQLDTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1027, Short.MAX_VALUE)
-        );
-        tabQLDTLayout.setVerticalGroup(
-            tabQLDTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 650, Short.MAX_VALUE)
-        );
-
-        tabControl.addTab("Quản Lý Đề Thi", new javax.swing.ImageIcon(getClass().getResource("/image/quanly.png")), tabQLDT); // NOI18N
-
-        tabThi.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                tabThiComponentShown(evt);
-            }
-        });
-
-        javax.swing.GroupLayout tabThiLayout = new javax.swing.GroupLayout(tabThi);
-        tabThi.setLayout(tabThiLayout);
-        tabThiLayout.setHorizontalGroup(
-            tabThiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1027, Short.MAX_VALUE)
-        );
-        tabThiLayout.setVerticalGroup(
-            tabThiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 650, Short.MAX_VALUE)
-        );
-
-        tabControl.addTab("          Thi         ", new javax.swing.ImageIcon(getClass().getResource("/image/thi.png")), tabThi, ""); // NOI18N
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1027, Short.MAX_VALUE)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 650, Short.MAX_VALUE)
-        );
-
-        tabControl.addTab("   Thống Kê    ", new javax.swing.ImageIcon(getClass().getResource("/image/thongke.png")), jPanel5); // NOI18N
 
         jLabel2.setText("Email");
 
@@ -142,13 +101,18 @@ public class formDisplay extends javax.swing.JFrame {
 
         txtEmail.setEditable(false);
 
-        btnGender.add(rbtnMale);
         rbtnMale.setText("Nam");
 
-        btnGender.add(rbtnFmale);
         rbtnFmale.setText("Nữ");
 
+        dateChooser.setDateFormatString("dd/MM/yyyy");
+
         btnSignUp.setText("Cập Nhật Thông Tin");
+        btnSignUp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSignUpActionPerformed(evt);
+            }
+        });
 
         txtID.setEditable(false);
 
@@ -183,11 +147,12 @@ public class formDisplay extends javax.swing.JFrame {
                                         .addGap(42, 42, 42)
                                         .addComponent(rbtnMale)
                                         .addGap(53, 53, 53)
-                                        .addComponent(rbtnFmale))))))
+                                        .addComponent(rbtnFmale)))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 168, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(147, 147, 147)
                         .addComponent(btnSignUp)))
-                .addContainerGap(117, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -249,45 +214,69 @@ public class formDisplay extends javax.swing.JFrame {
                 .addGap(56, 56, 56))
         );
 
-        tabControl.addTab("   Người Dùng ", new javax.swing.ImageIcon(getClass().getResource("/image/user.png")), tabUser); // NOI18N
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabControl)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabControl)
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addGap(0, 1027, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(tabUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addGap(0, 650, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(tabUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tabControlComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tabControlComponentShown
+    private void jPanel2ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel2ComponentShown
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_tabControlComponentShown
+    }//GEN-LAST:event_jPanel2ComponentShown
 
-    private void tabThiComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tabThiComponentShown
+    private void btnSignUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignUpActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tabThiComponentShown
+        try {
+            Socket socket = new Socket("localhost", 8000);
+            DataInputStream dis = new DataInputStream(socket.getInputStream());
+            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+            String send = "";
+            send += "7";
+            send += "///";
+            send += txtName.getText();
+            send += "///";
+            if(rbtnMale.isSelected()){
+                send += "1";
+                send += "///";
+            }
+            else{
+                send += "0";
+                send += "///";
+            }
+            Date date = dateChooser.getDate();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String dateString = dateFormat.format(date);
+            send += dateString;
+            send += "///";
+            send += txtEmail.getText();
+            send += "///";
+
+            dos.writeUTF(send);
+            String receive = dis.readUTF();
+            if(receive.equals("Updated")){
+                JOptionPane.showMessageDialog(this, "Cập nhật thông tin thành công");
+            }
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btnSignUpActionPerformed
 
     /**
      * @param args the command line arguments
@@ -306,28 +295,25 @@ public class formDisplay extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(formDisplay.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmUserInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(formDisplay.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmUserInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(formDisplay.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmUserInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(formDisplay.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmUserInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new formDisplay().setVisible(true);
+                new frmUserInfo().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup btnDapAn;
-    private javax.swing.ButtonGroup btnGender;
     private javax.swing.JButton btnSignUp;
     private com.toedter.calendar.JDateChooser dateChooser;
     private javax.swing.JLabel jLabel1;
@@ -336,14 +322,9 @@ public class formDisplay extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JRadioButton rbtnFmale;
     private javax.swing.JRadioButton rbtnMale;
-    private javax.swing.JTabbedPane tabControl;
-    private javax.swing.JPanel tabQLDT;
-    private javax.swing.JPanel tabThi;
     private javax.swing.JPanel tabUser;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtID;
