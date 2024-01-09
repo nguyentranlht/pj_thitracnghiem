@@ -104,7 +104,7 @@ public class ServerThread implements Runnable {
                     }
                     break;
                 case 6:
-                    System.out.println("Có Client đang thi trắc nghiệm...");
+                    System.out.println("Có Client lấy đề...");
                     String strBoDe = ConnectDB.getAllExams();
                     System.out.println(strBoDe);
                     dos.writeUTF(strBoDe);

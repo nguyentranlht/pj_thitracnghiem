@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package Client;
-
+import Server.ConnectDB;
 import Server.CauHoi;
 import Server.Exams;
 import java.awt.Color;
@@ -80,6 +80,13 @@ public class formDisplay extends javax.swing.JFrame {
         txtID = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblBoDe1 = new javax.swing.JTable();
+        jPanel3 = new javax.swing.JPanel();
+        lblMinPoint = new javax.swing.JLabel();
+        lblMaxPoint = new javax.swing.JLabel();
+        lblSoNguoi = new javax.swing.JLabel();
+        lblMdPoint = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -94,7 +101,7 @@ public class formDisplay extends javax.swing.JFrame {
         tabQLDT.setLayout(tabQLDTLayout);
         tabQLDTLayout.setHorizontalGroup(
             tabQLDTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1027, Short.MAX_VALUE)
+            .addGap(0, 1065, Short.MAX_VALUE)
         );
         tabQLDTLayout.setVerticalGroup(
             tabQLDTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,7 +164,7 @@ public class formDisplay extends javax.swing.JFrame {
         tabThiLayout.setHorizontalGroup(
             tabThiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabThiLayout.createSequentialGroup()
-                .addContainerGap(35, Short.MAX_VALUE)
+                .addContainerGap(73, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 963, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29))
         );
@@ -271,7 +278,7 @@ public class formDisplay extends javax.swing.JFrame {
         tabUserLayout.setHorizontalGroup(
             tabUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tabUserLayout.createSequentialGroup()
-                .addContainerGap(345, Short.MAX_VALUE)
+                .addContainerGap(383, Short.MAX_VALUE)
                 .addGroup(tabUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabUserLayout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -292,15 +299,106 @@ public class formDisplay extends javax.swing.JFrame {
 
         tabControl.addTab("   Người Dùng ", new javax.swing.ImageIcon(getClass().getResource("/image/user.png")), tabUser); // NOI18N
 
+        jScrollPane2.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jScrollPane2AncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        jScrollPane2.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                jScrollPane2ComponentShown(evt);
+            }
+        });
+
+        tblBoDe1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Tiêu Đề", "Người Tạo", "Số Câu", "Thời Gian"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblBoDe1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblBoDe1MouseClicked(evt);
+            }
+        });
+        tblBoDe1.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                tblBoDe1ComponentShown(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblBoDe1);
+
+        lblMinPoint.setText("ĐIỂM THẤP NHẤT :");
+
+        lblMaxPoint.setText("ĐIỂM CAO NHẤT :");
+
+        lblSoNguoi.setText("SỐ NGƯỜI THI :");
+
+        lblMdPoint.setText("ĐIỂM TRUNG BÌNH :");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(41, 41, 41)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblSoNguoi)
+                    .addComponent(lblMdPoint)
+                    .addComponent(lblMinPoint)
+                    .addComponent(lblMaxPoint))
+                .addContainerGap(144, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(lblSoNguoi)
+                .addGap(18, 18, 18)
+                .addComponent(lblMaxPoint)
+                .addGap(18, 18, 18)
+                .addComponent(lblMinPoint)
+                .addGap(18, 18, 18)
+                .addComponent(lblMdPoint)
+                .addContainerGap(46, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1027, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(121, 121, 121)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 655, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(63, 63, 63)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(117, 117, 117)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(192, Short.MAX_VALUE))
         );
 
         tabControl.addTab("   Thống Kê    ", new javax.swing.ImageIcon(getClass().getResource("/image/thongke.png")), jPanel5); // NOI18N
@@ -336,12 +434,12 @@ public class formDisplay extends javax.swing.JFrame {
 
     private void tabControlComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tabControlComponentShown
         // TODO add your handling code here:
-        
+        ListBoDe1();
     }//GEN-LAST:event_tabControlComponentShown
 
     private void tabThiComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tabThiComponentShown
         // TODO add your handling code here:
-        ListBoDe();
+        ListBoDe2();
     }//GEN-LAST:event_tabThiComponentShown
 
     private void jScrollPane1ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jScrollPane1ComponentShown
@@ -367,7 +465,36 @@ public class formDisplay extends javax.swing.JFrame {
         // TODO add your handling code here:
         
     }//GEN-LAST:event_tblBoDeComponentShown
-   public void ListBoDe() {
+
+    private void tblBoDe1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBoDe1MouseClicked
+        // TODO add your handling code here:
+        int viTriDongVuaBam = tblBoDe1.getSelectedRow();
+        int made = ((int)tblBoDe1.getValueAt(viTriDongVuaBam, 0));
+        try {
+            String Value = ConnectDB.layDiem(made);
+            String[] arrStr1 = Value.split("///");
+            lblMaxPoint.setText("ĐIỂM CAO NHẤT : " + arrStr1[0]);
+            lblMinPoint.setText("ĐIỂM THẤP NHẤT : " + arrStr1[1]);
+            lblMdPoint.setText("ĐIỂM TRUNG BÌNH : " + arrStr1[2]);
+            lblSoNguoi.setText("SỐ NGƯỜI THI : " + arrStr1[3]) ;
+        } catch (SQLException ex) {
+            Logger.getLogger(formDisplay.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_tblBoDe1MouseClicked
+
+    private void tblBoDe1ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tblBoDe1ComponentShown
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblBoDe1ComponentShown
+
+    private void jScrollPane2AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jScrollPane2AncestorAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jScrollPane2AncestorAdded
+
+    private void jScrollPane2ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jScrollPane2ComponentShown
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jScrollPane2ComponentShown
+   public void ListBoDe1() {
         try {
             socket = new Socket("localhost", 8000);
             dis = new DataInputStream(socket.getInputStream());
@@ -386,6 +513,33 @@ public class formDisplay extends javax.swing.JFrame {
                 item[3] =(Integer.parseInt(arrStr[i+3]));
                 item[4] =(Integer.parseInt(arrStr[i+4]));
                 tableModel.addRow(item);
+                
+            }  
+            tblBoDe.setModel(tableModel);
+        } catch (IOException ex) {
+            Logger.getLogger(formClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+   public void ListBoDe2() {
+        try {
+            socket = new Socket("localhost", 8000);
+            dis = new DataInputStream(socket.getInputStream());
+            dos = new DataOutputStream(socket.getOutputStream());
+            String flag = "6";
+            dos.writeUTF(flag);
+            String receive = dis.readUTF();
+            String[] arrStr = receive.split("///");
+            DefaultTableModel tableModel = (DefaultTableModel)tblBoDe1.getModel();
+            tableModel.setRowCount(0);
+            for (int i = 0; i < arrStr.length; i += 5) {
+                Object[] item = new Object[5];                    
+                item[0] =(Integer.parseInt(arrStr[i]));
+                item[1] =(arrStr[i+1]);
+                item[2] =(arrStr[i+2]);
+                item[3] =(Integer.parseInt(arrStr[i+3]));
+                item[4] =(Integer.parseInt(arrStr[i+4]));
+                tableModel.addRow(item);
+                
             }  
             tblBoDe.setModel(tableModel);
         } catch (IOException ex) {
@@ -441,8 +595,14 @@ public class formDisplay extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblMaxPoint;
+    private javax.swing.JLabel lblMdPoint;
+    private javax.swing.JLabel lblMinPoint;
+    private javax.swing.JLabel lblSoNguoi;
     private javax.swing.JRadioButton rbtnFmale;
     private javax.swing.JRadioButton rbtnMale;
     private javax.swing.JTabbedPane tabControl;
@@ -450,6 +610,7 @@ public class formDisplay extends javax.swing.JFrame {
     private javax.swing.JPanel tabThi;
     private javax.swing.JPanel tabUser;
     private javax.swing.JTable tblBoDe;
+    private javax.swing.JTable tblBoDe1;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtName;
